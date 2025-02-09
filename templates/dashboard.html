@@ -1,0 +1,334 @@
+{% extends "base.tx" %}
+
+{% block title %}Dashboard - RB4L Server{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header de bienvenida con botón de cerrar sesión -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] bg-clip-text text-transparent">
+                    Bienvenido, {{ user.username }}!
+                </h2>
+                <p class="text-gray-600 mt-2">Nametag: {{ user.nametag }}</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="online-status" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                    <i class="ri-checkbox-circle-line mr-1"></i>Offline
+                </span>
+                <a href="/logout" class="group flex items-center space-x-2 px-4 py-2 rounded-lg border-2 border-[#ffb7c5] text-[#ff85a2] hover:bg-[#ffb7c5] hover:text-white transition-all duration-300">
+                    <i class="ri-logout-box-line text-lg"></i>
+                    <span class="font-medium">Salir</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Configuración Rápida</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items  -center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center space-x-3">
+                    <i class="ri-notification-line text-[#ff85a2]"></i>
+                    <span class="text-gray-700">Notificaciones</span>
+                </div>
+                <button class="w-12 h-6 bg-[#ff85a2] rounded-full relative transition-colors duration-300">
+                    <span class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300"></span>
+                </button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center space-x-3">
+                    <i class="ri-mail-line text-[#ff85a2]"></i>
+                    <span class="text-gray-700">Correos promocionales</span>
+                </div>
+                <button class="w-12 h-6 bg-gray-300 rounded-full relative transition-colors duration-300">
+                    <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Grid de estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Tarjeta de Nivel -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Nivel</h3>
+                <i class="ri-award-line text-2xl text-[#ff85a2]"></i>
+            </div>
+            <p id="player-level" class="text-3xl font-bold text-gray-900">--</p>
+            <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] h-2 rounded-full" style="width: 45%"></div>
+            </div>
+            <p class="text-sm text-gray-600 mt-2">Nivel actual</p>
+        </div>
+
+        <!-- Tarjeta de Tiempo de Juego -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Tiempo de Juego</h3>
+                <i class="ri-time-line text-2xl text-[#ff85a2]"></i>
+            </div>
+            <p id="playtime" class="text-3xl font-bold text-gray-900">--</p>
+            <p id="last-connection" class="text-sm text-gray-600 mt-2">Última conexión: --</p>
+        </div>
+
+        <!-- Tarjeta de Logros -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Logros</h3>
+                <i class="ri-trophy-line text-2xl text-[#ff85a2]"></i>
+            </div>
+            <p id="total-achievements" class="text-3xl font-bold text-gray-900">--</p>
+            <p class="text-sm text-gray-600 mt-2">logros desbloqueados</p>
+        </div>
+
+        <!-- Tarjeta de Combate -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Combate</h3>
+                <i class="ri-sword-line text-2xl text-[#ff85a2]"></i>
+            </div>
+            <div class="space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-600">Asesinatos</span>
+                    <span id="pvp-kills" class="font-bold">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-600">Muertes</span>
+                    <span id="deaths" class="font-bold">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-600">Mobs eliminados</span>
+                    <span id="mob-kills" class="font-bold">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Ubicación Actual</h3>
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-gray-50 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">X</span>
+                    <span id="loc-x" class="font-bold">--</span>
+                </div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Y</span>
+                    <span id="loc-y" class="font-bold">--</span>
+                </div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Z</span>
+                    <span id="loc-z" class="font-bold">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sección de Equipo -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Equipo Actual</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="equipment-grid">
+            <!-- El contenido se llenará con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Sección de Actividad Reciente -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Últimos Logros</h3>
+        <div class="space-y-4" id="achievements-list">
+            <!-- El contenido se llenará con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Sección de Ubicación -->
+
+
+    <!-- Sección de Inventario -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Inventario actual</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="inventory-grid">
+            <!-- El contenido se llenará con JavaScript -->
+        </div>
+    </div>
+    <!-- Usando el UUID del jugador -->
+
+</div>
+
+<script>
+// Función para formatear fechas
+function formatDate(timestamp) {
+    const date = new Date(parseInt(timestamp));
+    return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Función para mostrar el equipo
+function displayEquipment(equipment) {
+    const equipmentGrid = document.getElementById('equipment-grid');
+    equipmentGrid.innerHTML = '';
+
+    const equipmentPieces = ['helmet', 'chestplate', 'leggings', 'boots'];
+    
+    equipmentPieces.forEach(piece => {
+        if (equipment[piece]) {
+            const item = equipment[piece];
+            const enchantmentsHtml = item.enchantments ? 
+                Object.entries(item.enchantments)
+                    .map(([ench, level]) => `<span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded">${ench} ${level}</span>`)
+                    .join(' ') : '';
+
+            const itemHtml = `
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium text-gray-800">${item.name || item.material}</span>
+                        <i class="ri-shield-line text-[#ff85a2]"></i>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        ${enchantmentsHtml}
+                    </div>
+                </div>
+            `;
+            equipmentGrid.innerHTML += itemHtml;
+        }
+    });
+}
+
+// Función para mostrar el inventario destacado
+function displayInventory(inventory) {
+    const inventoryGrid = document.getElementById('inventory-grid');
+    inventoryGrid.innerHTML = '';
+
+    // Ordenar el inventario por el campo 'slot'
+    inventory.sort((a, b) => a.slot - b.slot);
+
+    // Función para capitalizar y reemplazar guiones bajos con espacios
+    function formatName(name) {
+        return name.replace(/_/g, ' ')
+                   .split(' ')
+                   .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                   .join(' ');
+    }
+
+    // Función para traducir los nombres de los ítems
+    function translateItemName(name) {
+        const translations = {
+            'sword': 'Espada',
+            'shield': 'Escudo',
+            'potion': 'Poción',
+            'arrow': 'Flecha',
+            'bow': 'Arco',
+            'helmet': 'Casco',
+            'chestplate': 'Pechera',
+            'leggings': 'Grebas',
+            'boots': 'Botas',
+            // Añade más traducciones según sea necesario
+        };
+        return translations[name.toLowerCase()] || name;
+    }
+
+    for (let i = 0; i < inventory.length; i++) {
+        const item = inventory[i];
+        const formattedName = formatName(item.name || item.material);
+        const translatedName = translateItemName(formattedName);
+
+        const itemHtml = `
+            <div class="bg-gray-50 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-medium text-gray-800">${translatedName}</span>
+                    <span class="text-sm text-gray-500">x${item.amount}</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <!-- Aquí puedes añadir más detalles del ítem si es necesario -->
+                </div>
+            </div>
+        `;
+        inventoryGrid.innerHTML += itemHtml;
+    }
+}
+// Función para mostrar los últimos logros
+function displayAchievements(achievements) {
+    const achievementsList = document.getElementById('achievements-list');
+    achievementsList.innerHTML = '';
+
+    achievements.achievements_list.slice(0, 5).forEach(achievement => {
+        const achievementName = achievement.id.split('/').pop().replace(/_/g, ' ');
+        const achievementHtml = `
+            <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-pink-100 rounded-lg">
+                        <i class="ri-trophy-line text-[#ff85a2]"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-800 font-medium">${achievementName}</p>
+                        <p class="text-sm text-gray-500">${formatDate(achievement.date)}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        achievementsList.innerHTML += achievementHtml;
+    });
+}
+
+// Función para actualizar los datos del jugador
+async function updatePlayerStats() {
+    try {
+        const response = await fetch(`http://161.132.40.243:4567/player/name/{{ user.nametag }}`);
+        const data = await response.json();
+        
+        // Actualizar estado online
+        const onlineStatus = document.getElementById('online-status');
+        if (data.online_status) {
+            onlineStatus.className = 'px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium';
+            onlineStatus.innerHTML = '<i class="ri-checkbox-circle-line mr-1"></i>Online';
+        } else {
+            onlineStatus.className = 'px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm font-medium';
+            onlineStatus.innerHTML = '<i class="ri-checkbox-circle-line mr-1"></i>Offline';
+        }
+        
+        // Actualizar nivel
+        document.getElementById('player-level').textContent = data.level || '--';
+        
+        // Actualizar tiempo de juego
+        const hours = Math.floor(data.total_hours);
+        const minutes = Math.round((data.total_hours - hours) * 60);
+        document.getElementById('playtime').textContent = `${hours}h ${minutes}m`;
+        
+        // Actualizar última conexión
+        document.getElementById('last-connection').textContent = `Última conexión: ${data.last_connection}`;
+
+        // Actualizar estadísticas de combate
+        document.getElementById('pvp-kills').textContent = data.combat_stats.player_kills;
+        document.getElementById('deaths').textContent = data.combat_stats.deaths;
+        document.getElementById('mob-kills').textContent = data.combat_stats.mob_kills;
+
+        // Actualizar logros
+        document.getElementById('total-achievements').textContent = data.achievements.total_achievements;
+
+        // Actualizar ubicación
+        document.getElementById('loc-x').textContent = Math.round(data.location.x);
+        document.getElementById('loc-y').textContent = Math.round(data.location.y);
+        document.getElementById('loc-z').textContent = Math.round(data.location.z);
+        
+        // Actualizar equipo e inventario
+        displayEquipment(data.equipment);
+
+        displayAchievements(data.achievements);
+
+        displayInventory(data.inventory);
+        
+    } catch (error) {
+        console.error('Error fetching player stats:', error);
+    }
+}
+
+// Actualizar datos cada 30 segundos
+updatePlayerStats();
+</script>
+{% endblock %}

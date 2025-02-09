@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RB4L Server Store{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            background-image: 
+                linear-gradient(to right, rgba(106,90,205,0.05) 0%, rgba(72,61,139,0.02) 100%);
+        }
+
+        .nav-container {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .logo-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffb7c5, #ff85a2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: #ff85a2;
+            background: rgba(255,183,197,0.1);
+        }
+
+        .nav-link:hover::before {
+            width: 80%;
+        }
+
+        .auth-button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn {
+            background: rgba(255,183,197,0.1);
+            color: #ff85a2;
+        }
+
+        .login-btn:hover {
+            background: rgba(255,183,197,0.2);
+            transform: translateY(-2px);
+        }
+
+        .register-btn {
+            background: linear-gradient(45deg, #ffb7c5, #ff85a2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,183,197,0.3);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,183,197,0.4);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen">
+    <header class="sticky top-0 z-50 nav-container">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex justify-between items-center">
+                <div class="flex items-center space-x-8">
+                    <div class="logo-container">
+                        <img src="{{ url_for('static', filename='imgs/ico.webp') }}" 
+                             alt="Konstructor Server Logo" 
+                             class="w-12 h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] bg-clip-text text-transparent">
+                            RB4L
+                        </h1>
+                        <div class="flex space-x-2 ml-8">
+                            <a href="{{ url_for('index') }}" class="nav-link flex items-center">
+                                <i class="ri-home-4-line mr-2"></i>Servidor
+                            </a>
+                            <a href="{{ url_for('store') }}" class="nav-link flex items-center">
+                                <i class="ri-store-2-line mr-2"></i>Tienda
+                            </a>
+                            {% if 'user_id' in session %}
+                            <a href="#" class="nav-link flex items-center">
+                                <i class="ri-question-line mr-2"></i>Ayuda
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    {% if 'user_id' not in session %}
+                        <a href="{{ url_for('login') }}" class="auth-button login-btn">
+                            <i class="ri-user-line mr-2"></i>Iniciar Sesión
+                        </a>
+                        <a href="{{ url_for('register') }}" class="auth-button register-btn">
+                            <i class="ri-user-add-line mr-2"></i>Registrarse
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="auth-button login-btn">
+                            <i class="ri-dashboard-line mr-2"></i>Dashboard
+                        </a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,143 @@
+{% extends "base.tx" %}
+
+{% block title %}Checkout - RB4L Store{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="p-6 bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2]">
+            <h2 class="text-2xl font-bold text-white">Finalizar Compra</h2>
+        </div>
+
+        <!-- Product Section -->
+        <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center space-x-6">
+                <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-50">
+                    <img src="{{ product.Imagen }}" alt="{{ product.name }}" class="w-full h-full object-cover"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-5"></div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.Nombre }}</h3>
+                    <p class="text-gray-600 mb-4">{{ product.Descripcion }}</p>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-2xl font-bold text-[#ff85a2]">${{ product.Precio }} USD</span>
+                        {% if product.Duracion %}
+                            <span class="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm font-medium">{{ product.Duracion }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nametag Input Section -->
+        <div class="p-6 border-b border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Información de cuenta</h3>
+            <div class="max-w-md">
+                <div class="relative">
+                    <label for="nametag" class="block text-sm font-medium text-gray-700 mb-2">
+                        Ingresa tu Nametag
+                    </label>
+                    <input 
+                        type="text" 
+                        id="nametag" 
+                        name="nametag"
+                        class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#ff85a2] focus:ring focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-300"
+                        placeholder="Tu nombre en el servidor"
+                        required
+                    />
+                    <div class="absolute right-3 top-9">
+                        <i class="ri-user-line text-gray-400"></i>
+                    </div>
+                </div>
+                <p class="mt-2 text-sm text-gray-500">Asegúrate de escribir correctamente tu Nametag</p>
+            </div>
+        </div>
+
+        <!-- Summary and Checkout Button -->
+        <div class="p-6 bg-gray-50">
+            <div class="max-w-md mx-auto">
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium">${{ product.Precio }} USD</span>
+                    </div>
+                    <div class="flex justify-between font-medium">
+                        <span class="text-gray-800">Total</span>
+                        <span class="text-xl text-[#ff85a2]">${{ product.Precio }} USD</span>
+                    </div>
+                </div>
+                <form method="POST" action="" id="checkout-form">
+                    <input type="hidden" name="product_id" value="{{ product.Id }}">
+                    <input type="hidden" name="price" value="{{ product.Precio }}">
+                    <button 
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] text-white font-medium py-4 px-6 rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50"
+                    >
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="ri-bank-card-line text-lg"></i>
+                            <span>Completar Compra</span>
+                        </div>
+                    </button>
+                </form>
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    Al completar la compra aceptas nuestros 
+                    <a href="#" class="text-[#ff85a2] hover:underline">Términos y Condiciones</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <h1>acá irá implementación en dlocalgo</h1>
+    <!-- Features Section -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for feature in features %}
+        <div class="bg-white rounded-xl p-4 shadow-md flex items-start space-x-3">
+            <div class="p-2 bg-pink-100 rounded-lg">
+                <i class="{{ feature.icon }} text-[#ff85a2] text-lg"></i>
+            </div>
+            <div>
+                <h4 class="font-medium text-gray-800">{{ feature.title }}</h4>
+                <p class="text-sm text-gray-500">{{ feature.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const nametag = document.getElementById('nametag').value.trim();
+    if (!nametag) {
+        alert('Por favor, ingresa tu nametag');
+        return;
+    }
+
+    // Añadir el nametag al formulario
+    const nametagInput = document.createElement('input');
+    nametagInput.type = 'hidden';
+    nametagInput.name = 'nametag';
+    nametagInput.value = nametag;
+    this.appendChild(nametagInput);
+
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this)
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            window.location.href = data.redirect_url;
+        } else {
+            alert(data.error || 'Hubo un error al procesar tu pago');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Hubo un error al procesar tu pago');
+    }
+});
+</script>
+{% endblock %}

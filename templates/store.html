@@ -1,0 +1,217 @@
+{% extends "base.tx" %}
+
+{% block title %}RB4L Server Store{% endblock %}
+
+{% block extra_css %}
+<style>
+            body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            background-image: 
+                linear-gradient(to right, rgba(106,90,205,0.05) 0%, rgba(72,61,139,0.02) 100%);
+        }
+
+        .custom-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 183, 197, 0.1);
+            background: linear-gradient(145deg, 
+                rgba(255,255,255,0.9), 
+                rgba(255, 240, 245, 0.3)
+            );
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .subtle-gradient-text {
+            background: linear-gradient(45deg, #ffb7c5, #ff85a2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtle-gradient-btn {
+            background: linear-gradient(to right, #ffb7c5, #ff85a2);
+            transition: all 0.3s ease;
+        }
+
+        .subtle-gradient-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(255, 183, 197, 0.3);
+        }
+
+    .custom-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+
+    .product-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(255, 183, 197, 0.2);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .product-content {
+        width: 100%;
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .custom-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 25px rgba(255, 183, 197, 0.2);
+    }
+
+    .custom-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 183, 197, 0.1) 10%, transparent 10.01%);
+        transform: rotate(30deg);
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+
+    .custom-card:hover::before {
+        transform: rotate(60deg);
+    }
+
+    .custom-card::after {
+        content: '🌸';
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        font-size: 4rem;
+        opacity: 0.1;
+        transform: rotate(20deg);
+        transition: all 0.5s ease;
+    }
+
+    .custom-card:hover::after {
+        opacity: 0.2;
+        transform: rotate(40deg);
+    }
+
+    .type-label-comando {
+        background-color: rgba(173, 216, 230, 0.2);
+        color: #4682B4;
+    }
+
+    .type-label-cosmetico {
+        background-color: rgba(255, 182, 193, 0.2);
+        color: #FF69B4;
+    }
+
+    .type-label-objeto {
+        background-color: rgba(221, 160, 221, 0.2);
+        color: #9370DB;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Products will be dynamically inserted here -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const productGrid = document.getElementById('productGrid');
+
+        function renderProducts(products) {
+            const checkoutBaseUrl = '{{ checkout_base_url }}';
+            productGrid.innerHTML = products.map(product => {
+                let labelClass = 'type-label-comando';
+
+                switch(product[6]) {
+                    case 'Cosmetico':
+                        labelClass = 'type-label-cosmetico';
+                        break;
+                    case 'Objeto':
+                        labelClass = 'type-label-objeto';
+                        break;
+                }
+
+                return `
+                <div class="custom-card rounded-2xl">
+                    <div class="product-image-container">
+                        <img src="${product[7]}" alt="${product[1]}" class="product-image">
+                    </div>
+                    
+                    <div class="product-content">
+                        <div class="mb-4">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                                ${product[1]}
+                            </h2>
+                            <div class="text-sm rounded-full px-3 py-1 self-start inline-block ${labelClass}">
+                                ${product[6]}
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <p class="text-gray-600 mb-2">
+                                ${product[4]}
+                            </p>
+                            <div class="text-sm text-gray-500 space-y-1">
+                                ${product[5].split(',').map(benefit => `
+                                    <div class="flex items-center">
+                                        <i class="ri-check-line text-green-500 mr-2"></i>
+                                        ${benefit.trim()}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto">
+                            <div class="text-sm text-gray-500 mb-2">
+                                Duración: ${product[3]}
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-3xl font-bold subtle-gradient-text">
+                                    $${product[2]}
+                                </div>
+                                <button class="py-2 px-4  rounded-xl  text-white  font-semibold  subtle-gradient-btn flex items-center" onclick="window.location.href='${checkoutBaseUrl}${product[0]}';">
+                                    <i class="ri-shopping-cart-line mr-2"></i>
+                                    Comprar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        async function fetchProducts() {
+            try {
+                const response = await fetch('{{ url_for("get_products") }}');
+                const products = await response.json();
+                renderProducts(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                productGrid.innerHTML = `
+                    <div class="col-span-full text-center text-red-500">
+                        No se pudieron cargar los productos. Intente nuevamente más tarde.
+                    </div>
+                `;
+            }
+        }
+
+        fetchProducts();
+    });
+</script>
+{% endblock %}

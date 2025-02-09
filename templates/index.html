@@ -1,0 +1,293 @@
+{% extends "base.tx" %}
+
+{% block title %}RB4L - Tu Aventura Minecraft{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #FFB6C1;  /* Light Pink */
+        --secondary-color: #DDA0DD;  /* Plum */
+        --accent-color: #FFF0F5;  /* Lavender Blush */
+        --text-dark: #333;
+        --sakura-gradient: linear-gradient(135deg, #FFB6C1, #DDA0DD);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: white;
+        color: var(--text-dark);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Horizontal Carousel Styles */
+    .carousel-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .carousel-wrapper {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+        flex: 0 0 100%;
+        width: 100%;
+        position: relative;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .carousel-controls {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+
+    .carousel-control {
+        background: rgba(255,255,255,0.7);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .carousel-control:hover {
+        background: rgba(255,255,255,1);
+    }
+
+    /* Sakura Falling Effect */
+    #sakura-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    /* Glassmorphic Cherry Blossom Style */
+    .cherry-glass {
+        background: rgba(255, 182, 193, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 182, 193, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(221, 160, 221, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* Typography with Soft Sakura Touch */
+    h1, h2, h3 {
+        background: var(--sakura-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Server Stat Cards */
+    .server-stat {
+        background: rgba(255, 182, 193, 0.1);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .server-stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(221, 160, 221, 0.2);
+    }
+
+    /* Connect Button */
+    .sakura-btn {
+        background: var(--sakura-gradient);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .sakura-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(221, 160, 221, 0.5);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+    .tttdc{
+        color: #FFF0F5 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <section class="grid md:grid-cols-2 gap-12 mb-24 items-center">
+        <div>
+            <h1 class="text-4xl font-bold mb-12">
+                RB4L: Construye con seguiridad
+            </h1>
+            <p class="text-xl text-gray-700 mb-3">
+                Nuestro servidor es más que un lugar para jugar; es un espacio donde hacer amigos, compartir aventuras y crear recuerdos. Ya seas un constructor experimentado, un explorador intrépido o estés dando tus primeros pasos en Minecraft, aquí encontrarás tu lugar.
+            </p>
+        </div>
+
+        <!-- Horizontal Carousel -->
+        <div class="carousel-container">
+            <div id="dynamic-carousel" class="carousel-wrapper">
+                {% for imagen in imagenes_servidor %}
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename=imagen) }}" 
+                         alt="Captura del Servidor {{ loop.index }}">
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="carousel-controls">
+                <button id="prevBtn" class="carousel-control">
+                    <i class="ri-arrow-left-line"></i>
+                </button>
+                <button id="nextBtn" class="carousel-control">
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conexión y Soporte -->
+    <section class="grid md:grid-cols-2 gap-12">
+        <div class="space-y-8">
+            <div class="cherry-glass p-8">
+                <h2 class="text-3xl font-bold mb-6">Formas de Conectarte</h2>
+                <div class="server-stat">
+                    <div class="mr-6 bg-pink-200/20 p-4 rounded-full">
+                        <i class="ri-server-line text-3xl text-pink-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold">Java Edition</h3>
+                        <p class="text-lg font-mono text-gray-700">play.omegari.com</p>
+                    </div>
+                </div>
+
+                <div class="server-stat">
+                    <div class="mr-6 bg-purple-200/20 p-4 rounded-full">
+                        <i class="ri-smartphone-line text-3xl text-purple-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold">Bedrock Edition</h3>
+                        <p class="text-lg font-mono text-gray-700">rb4l.zapto.org</p>
+                        <p class="text-sm text-gray-500">Puerto: 25565</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#5865F2] p-8 rounded-2xl flex items-center">
+                <div class="mr-6">
+                    <i class="ri-discord-fill text-6xl text-white"></i>
+                </div>
+                <div>
+                    <h6  class="text-2xl font-bold text-white">Únete a Nuestra Comunidad de Discord</h3>
+                    <p class="mb-4 text-white/80">
+                        Conecta, chatea y juega con nuestra comunidad. Eventos, soporte y diversión te esperan.
+                    </p>
+                    <a href="https://discord.gg/tu-enlace" 
+                       target="_blank" 
+                       class="inline-flex items-center bg-white text-[#5865F2] px-6 py-3 rounded-full hover:bg-gray-100 transition-all">
+                        <i class="ri-discord-fill mr-3 text-2xl"></i>
+                        Únete al Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cherry-glass p-8">
+            <h2 class="text-3xl font-bold mb-6">Características Únicas</h2>
+            
+            {% set features = [
+                ('ri-shield-star-line', 'Sistema Anti-Griefing', 'Protección avanzada para tu experiencia'),
+                ('ri-calendar-event-line', 'Eventos Semanales', 'Desafíos y premios increíbles'),
+                ('ri-team-line', 'Staff Dedicado', 'Atención personalizada 24/7'),
+                ('ri-earth-line', 'Mundo Dinámico', 'Un universo en constante evolución'),
+                ('ri-customer-service-2-line', 'Soporte Directo', 'Resolvemos tus dudas al instante')
+            ] %}
+
+            {% for icon, title, description in features %}
+            <div class="server-stat mb-4">
+                <div class="mr-6 bg-pink-200/20 p-4 rounded-full">
+                    <i class="{{ icon }} text-3xl text-pink-300"></i>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold">{{ title }}</h4>
+                    <p class="text-sm text-gray-600">{{ description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Horizontal Carousel Functionality
+    const carousel = document.getElementById('dynamic-carousel');
+    const carouselItems = carousel.querySelectorAll('.carousel-item');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : carouselItems.length - 1;
+        updateCarousel();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex < carouselItems.length - 1) ? currentIndex + 1 : 0;
+        updateCarousel();
+    });
+
+    // Auto-rotate carousel
+    function autoRotate() {
+        currentIndex = (currentIndex + 1) % carouselItems.length;
+        updateCarousel();
+    }
+
+    let autoRotateInterval = setInterval(autoRotate, 5000);
+
+    // Pause auto-rotation on hover
+    carousel.addEventListener('mouseenter', () => clearInterval(autoRotateInterval));
+    carousel.addEventListener('mouseleave', () => {
+        autoRotateInterval = setInterval(autoRotate, 5000);
+    });
+</script>
+{% endblock %}

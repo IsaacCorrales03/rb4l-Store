@@ -1,0 +1,129 @@
+{% extends "base.tx" %}
+
+{% block title %}Registro - RB4L Server{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-96 transform transition-all duration-300 hover:shadow-xl">
+        <h2 class="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] bg-clip-text text-transparent">
+            Crear Cuenta
+        </h2>
+        
+        {% if errors %}
+        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl relative mb-4" role="alert">
+            <div class="flex items-center">
+                <i class="ri-error-warning-line mr-2"></i>
+                <span class="block sm:inline">{{ errors[0] }}</span>
+            </div>
+        </div>
+        {% endif %}
+        
+        <form method="POST" class="space-y-6">
+            <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2" for="username">
+                    Nombre de Usuario
+                </label>
+                <div class="relative">
+                    <i class="ri-user-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-gray-700 leading-tight focus:outline-none focus:border-[#ff85a2] focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-20 transition-all duration-300"
+                        id="username" 
+                        name="username" 
+                        type="text" 
+                        placeholder="Elige un nombre de usuario"
+                        required
+                    >
+                </div>
+            </div>
+            <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2" for="nametag">
+                    Nametag en Minecraft
+                </label>
+                <div class="relative">
+                    <i class="ri-user-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-gray-700 leading-tight focus:outline-none focus:border-[#ff85a2] focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-20 transition-all duration-300"
+                        id="nametag" 
+                        name="nametag" 
+                        type="text" 
+                        placeholder="Ingresa tu nombre en Minecraft"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
+                    Correo Electrónico
+                </label>
+                <div class="relative">
+                    <i class="ri-mail-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-gray-700 leading-tight focus:outline-none focus:border-[#ff85a2] focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-20 transition-all duration-300"
+                        id="email" 
+                        name="email" 
+                        type="email" 
+                        placeholder="Tu correo electrónico"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">
+                    Contraseña
+                </label>
+                <div class="relative">
+                    <i class="ri-lock-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-gray-700 leading-tight focus:outline-none focus:border-[#ff85a2] focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-20 transition-all duration-300"
+                        id="password" 
+                        name="password" 
+                        type="password" 
+                        placeholder="Elige una contraseña"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2" for="confirm_password">
+                    Confirmar Contraseña
+                </label>
+                <div class="relative">
+                    <i class="ri-lock-password-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-gray-700 leading-tight focus:outline-none focus:border-[#ff85a2] focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-20 transition-all duration-300"
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        type="password" 
+                        placeholder="Confirma tu contraseña"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between pt-2">
+                <button 
+                    class="bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2] hover:from-[#ff85a2] hover:to-[#ff6b93] text-white font-bold py-3 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ffb7c5] focus:ring-opacity-50 transform transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                    type="submit">
+                    Crear Cuenta
+                </button>
+                <a class="inline-block align-baseline font-semibold text-sm text-[#ff85a2] hover:text-[#ff6b93] transition-colors duration-300" 
+                   href="{{ url_for('index') }}">
+                    Volver al Inicio
+                </a>
+            </div>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">¿Ya tienes una cuenta?
+                    <a href="{{ url_for('login') }}" 
+                       class="font-semibold text-[#ff85a2] hover:text-[#ff6b93] transition-colors duration-300">
+                        Inicia Sesión
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
