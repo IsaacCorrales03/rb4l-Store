@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
 import re
+import logging
 import email_validator
 from functools import wraps
 
@@ -200,8 +201,14 @@ def checkout(id):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute(f'SELECT * FROM Productos WHERE Id = {id}')
     producto = cur.fetchone()
-    print(producto)
     return render_template('checkout.html', product=producto)
+
+@app.route('/payment_complete/<int:id>/<string:id_order>/<string:nametag>')
+def payment_complete(id, id_order,nametag):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute(f'SELECT * FROM Productos WHERE Id = {id}')
+    producto = cur.fetchone()
+    return render_template('payment_complete.html', product = producto, id_order = id_order,nametag = nametag)
 
 @app.route('/logout')
 def logout():

@@ -1,0 +1,66 @@
+{% extends "base.tx" %}
+
+{% block title %}Pago Completado - RB4L Store{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="p-6 bg-gradient-to-r from-[#ffb7c5] to-[#ff85a2]">
+            <h2 class="text-2xl font-bold text-white">¡Pago Completado!</h2>
+        </div>
+
+        <!-- Success Message Section -->
+        <div class="p-8 text-center">
+            <div class="mb-6">
+                <div class="w-20 h-20 bg-green-100 rounded-full mx-auto flex items-center justify-center">
+                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">¡Gracias por tu compra!</h3>
+            <p class="text-gray-600 mb-6">Tu pago ha sido procesado exitosamente</p>
+            
+            <!-- Order Details -->
+            <div class="max-w-md mx-auto bg-gray-50 rounded-lg p-6 mb-6">
+                <div class="text-left">
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">ID de Orden:</span>
+                        <span class="font-medium">{{ id_order }}</span>
+                    </div>
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Nametag:</span>
+                        <span class="font-medium">{{ nametag }}</span>
+                    </div>
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Producto:</span>
+                        <span class="font-medium">{{ product.Nombre }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Total:</span>
+                        <span class="font-semibold text-[#ff85a2]">${{ product.Precio }} USD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="text-gray-600 mb-8">
+                <p class="mb-2">Recibirás un correo electrónico con los detalles de tu compra.</p>
+                <p>Tu beneficio será activado en los próximos minutos.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-[#ff85a2] bg-pink-50 hover:bg-pink-100 transition duration-300">
+                    Volver al Inicio
+                </a>
+                <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-[#ff85a2] hover:bg-[#ff6b8e] transition duration-300">
+                    Unirse al Discord
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
